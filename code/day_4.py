@@ -22,6 +22,8 @@ tags_to_test = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
 
 valid_ids = 0
 
+valid_list = []
+
 for sub_dict in main_list:
     is_valid = True
     for tag in tags_to_test:
@@ -43,6 +45,7 @@ for sub_dict in main_list:
         # print("reading ecl")
         ecl = sub_dict["ecl"]
         # print("reading pid")
+        pid = sub_dict["pid"]
         # cid = sub_dict["cid"]
 
         if not(byr > 1919 and byr < 2003):
@@ -103,8 +106,11 @@ for sub_dict in main_list:
             if not(is_valid_ecl):
                 print("invalid ecl : ", ecl)
                 continue
-
-        if len(pid) == 8:
+        else:
+            print("invalid ecl : ", ecl)
+            continue
+        
+        if len(pid) == 9:
             is_valid_pid = False
             valid_char_cnt = 0
             for char in pid:
@@ -112,25 +118,42 @@ for sub_dict in main_list:
                     if valid_pid == char:
                         valid_char_cnt += 1
                         continue
+            print("PID valid char count: " , valid_char_cnt)
 
-            if not(all_valid_chars == 8):
+            if not(valid_char_cnt == 9):
                 print("invalid pid : ", pid)
                 continue
+        else:
+            print("invalid pid : ", pid)
+            continue
         
-        try:
-            cid = sub_dict["cid"]
-            try:
-                int(cid)
-            except:
-                print("invalid cid : ", cid)
-                continue
-        except:
-            pass
+        
+        # try:
+        #     cid = sub_dict["cid"]
+        #     if len(cid) > 3:
+        #         print("invalid cid : ", cid)
+        #         continue
+        #     try:
+        #         int(cid)
+        #     except:
+        #         print("invalid cid : ", cid)
+        #         continue
+        # except:
+        #     pass
 
         print("reached the end!")
         valid_ids += 1
 
     except:
+        print(" I FAILED ")
+        print(sub_dict)
         continue
 
+    valid_list.append(sub_dict)
+
 print(valid_ids)
+
+for valid in valid_list:
+    pid, iyr, hgt, eyr, byr, hcl, ecl = [valid[s] for s in ["pid", "iyr", "hgt", "eyr", "byr", "hcl", "ecl"]]
+    print("pid : {}\t, iyr : {}\t, hgt : {}\t, eyr : {}\t, byr : {}\t, hcl: {}\t, ecl: {}".format(pid, iyr, hgt, eyr, byr, hcl, ecl) )
+# print(valid_list)
